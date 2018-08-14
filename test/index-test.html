@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>web-socket</title>
+</head>
+
+<body>
+  <div id="log"></div>
+  <script>
+    const logEle = document.getElementById('log');
+    function log(...text) {
+      console.log(text);
+      logEle.innerText += text + '\n'
+    }
+
+    const ws = new WebSocket('wss://echo.websocket.org');
+
+    ws.onopen = (event) => {
+      log('connection open ...');
+      ws.send('Hello')
+      const data = new ArrayBuffer(1000);
+      ws.send(data);
+      if (ws.bufferedAmount === 0) {
+        // 发送完毕
+      } else {
+        // 发送未结束
+      }
+    }
+
+    ws.onmessage = (event) => {
+      log('Receive message ...', event.data);
+      ws.close()
+    }
+
+    ws.onclose = (event) => {
+      log('Connection closed.');
+    }
+
+    switch (ws.readyState) {
+      case WebSocket.CONNECTING:
+        // 0 do something
+        break;
+      case WebSocket.OPEN:
+        // 1 do something
+        break;
+      case WebSocket.CLOSING:
+        // 2 do something
+        break;
+      case WebSocket.CLOSED:
+        // 3 do something
+        break;
+      default:
+        // this never happens
+        break;
+    }
+
+
+
+    log('code end');
+  </script>
+</body>
+
+</html>

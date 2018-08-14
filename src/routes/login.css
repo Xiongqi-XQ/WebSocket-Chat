@@ -1,0 +1,11 @@
+.wrapper {
+  display: flex;
+  height: 100%;
+}
+.container {
+  margin: auto;
+  text-align: center;
+}
+.button {
+  margin: 10px 0;
+}
