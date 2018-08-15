@@ -1,7 +1,7 @@
 const loginedModel = {
   namespace: 'store',
   state: {
-    name: ''
+    name: '',
   },
   reducers: {
     loginSuccess(state, action) {

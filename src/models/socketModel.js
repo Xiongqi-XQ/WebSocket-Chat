@@ -11,8 +11,8 @@ const socketModel = {
     login(action) {
       socket.emit('loginToServer', { name: action.name });
     },
-    sendMessage(action) {
-      socket.emit('msgToServer', { message: action.message });
+    sendMessage({ name, message }) {
+      socket.emit('msgToServer', { name, message });
     },
   },
   subscriptions: {
@@ -20,6 +20,7 @@ const socketModel = {
       socket.on('connect', () => console.log('socket ' + url + ' connected sucess.'));
       socket.on('loginResToClient', data => {
         if (data.result === 1) {
+          window.name = data.name;
           dispatch({ type: 'store/loginSuccess', name: data.name });
           dispatch({ type: 'chat/newClient', name: data.name });
           history.push('/chat');

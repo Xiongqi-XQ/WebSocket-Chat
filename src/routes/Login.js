@@ -12,7 +12,7 @@ class Login extends React.Component {
     if (name) {
       const { dispatch } = this.props;
       dispatch({ type: 'socket/login', name });
-      this.setState({ name: '' });
+      // this.setState({ name: '' });
     }
   };
   render() {
@@ -25,8 +25,8 @@ class Login extends React.Component {
             onChange={event => this.setState({ name: event.target.value })}
             onPressEnter={this.handleLogin}
           />
-          <Button className={css.button} onClick={this.handleLogin}>
-            登录
+          <Button className={css.button} disabled={!this.state.name} onClick={this.handleLogin}>
+            进入
           </Button>
         </div>
       </div>

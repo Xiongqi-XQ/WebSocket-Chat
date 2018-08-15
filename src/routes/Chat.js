@@ -23,7 +23,7 @@ class Chat extends React.Component {
   handleSendMessage = event => {
     const message = this.input.current.input.value;
     if (message) {
-      this.props.dispatch({ type: 'socket/sendMessage', message });
+      this.props.dispatch({ type: 'socket/sendMessage', message, name: this.props.name });
       this.input.current.input.value = '';
     }
   };

@@ -1,7 +1,7 @@
 import dva from 'dva';
-import socketModel from './models/socketModel'
-import loginedModel from './models/loginModel'
-import chatModel from './models/chatModel'
+import socketModel from './models/socketModel';
+import loginedModel from './models/loginModel';
+import chatModel from './models/chatModel';
 import './index.css';
 
 // 1. Initialize

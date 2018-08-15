@@ -1,4 +1,10 @@
 {
   "extraBabelPlugins": [["import", { "libraryName": "antd", "libraryDirectory": "es", "style": "css" }]],
-  "devtool": "eval-source-map"
+  "env": {
+    "development": {
+      "devtool": "eval-source-map",
+      "extraBabelPlugins": ["dva-hmr"]
+    },
+    "production": {}
+  }
 }
