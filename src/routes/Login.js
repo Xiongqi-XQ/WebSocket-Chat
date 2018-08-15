@@ -4,14 +4,19 @@ import { connect } from 'dva';
 import css from './login.css';
 
 class Login extends React.Component {
-  state = {
-    name: '',
-  };
+  constructor(props) {
+    super(props);
+    this.input = React.createRef();
+  }
+  componentDidMount() {
+    this.input.current.input.focus();
+  }
   handleLogin = event => {
-    const name = this.state.name.trim();
+    const name = this.input.current.input.value.trim();
     if (name) {
       const { dispatch } = this.props;
-      dispatch({ type: 'socket/login', name });
+      if (window.localName) dispatch({ type: 'socket/rename', name });
+      else dispatch({ type: 'socket/login', name });
       // this.setState({ name: '' });
     }
   };
@@ -19,13 +24,8 @@ class Login extends React.Component {
     return (
       <div className={css.wrapper}>
         <div className={css.container}>
-          <Input
-            placeholder="输入用户名"
-            value={this.state.name}
-            onChange={event => this.setState({ name: event.target.value })}
-            onPressEnter={this.handleLogin}
-          />
-          <Button className={css.button} disabled={!this.state.name} onClick={this.handleLogin}>
+          <Input placeholder="输入用户名" ref={this.input} onPressEnter={this.handleLogin} />
+          <Button className={css.button} onClick={this.handleLogin}>
             进入
           </Button>
         </div>

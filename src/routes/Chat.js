@@ -14,6 +14,9 @@ class Chat extends React.Component {
   UNSAFE_componentWillMount() {
     if (!this.props.name) this.props.history.push('/');
   }
+  componentDidMount() {
+    // this.input.current.input.focus();
+  }
   componentDidUpdate() {
     let { firstChild } = this.chatDiv.current;
     this.chatDiv.current.scrollTop = firstChild.offsetHeight;
@@ -25,6 +28,36 @@ class Chat extends React.Component {
     if (message) {
       this.props.dispatch({ type: 'socket/sendMessage', message, name: this.props.name });
       this.input.current.input.value = '';
+    }
+  };
+  renderClient = ({ name, client, oldName }) => {
+    switch (client) {
+      case 1:
+        return (
+          <List.Item className={css.newClient + ' client'}>
+            <div>欢迎 {name} 加入聊天室</div>
+          </List.Item>
+        );
+      case 2:
+        return (
+          <List.Item className={css.leaveClient + ' client'}>
+            <div>{name} 离开聊天室</div>
+          </List.Item>
+        );
+      case 3:
+        return (
+          <List.Item className={css.renameClient + ' client'}>
+            <div>{oldName + ' -> 换了个新名字 -> ' + name} </div>
+          </List.Item>
+        );
+      case 4:
+        return (
+          <List.Item className={css.reconnectClient + ' client'}>
+            <div>{'欢迎 ' + name + ' 又回来了'} </div>
+          </List.Item>
+        );
+      default:
+        return;
     }
   };
   render() {
@@ -43,14 +76,8 @@ class Chat extends React.Component {
                   {item.name !== name ? item.name + ':' : ''} {item.message}
                 </div>
               </List.Item>
-            ) : item.client === 1 ? (
-              <List.Item className={css.newClient}>
-                <div>欢迎 {item.name} 加入聊天室</div>
-              </List.Item>
             ) : (
-              <List.Item className={css.leaveClient}>
-                <div>{item.name} 离开聊天室</div>
-              </List.Item>
+              this.renderClient(item)
             )
           }
         />
