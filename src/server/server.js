@@ -3,7 +3,7 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const port = 9002;
-const log = console.log;
+const log = (...rest) => console.log(`[${new Date().toLocaleString()}]`, ...rest);
 /**s
  *监听客户端连接
  *io是我们定义的服务端的socket
@@ -14,34 +14,43 @@ let count = 0;
 io.on('connection', socket => {
   // console.log(socket);
   let socketName = '';
-  log(`[${new Date().toLocaleString()}]`, '😐', `Connect(${++count})`);
+  log('😐', `Connect(${++count})`);
   socket.on('loginToServer', data => {
     const name = data.name;
     socketName = name;
     socket.emit('loginResToClient', { result: 1, name });
     io.sockets.emit('newClient', { result: 1, name });
-    log(`[${new Date().toLocaleString()}]`, '😀', 'Login:', name);
+    log('😀', 'Login:', name);
   });
-  socket.on('renameToServer', ({name,oldName}) => {
+  socket.on('renameToServer', ({ name, oldName }) => {
     socketName = name;
     socket.emit('loginResToClient', { result: 1, name });
     io.sockets.emit('newClient', { result: 3, name, oldName });
-    log(`[${new Date().toLocaleString()}]`, '📝', 'Rename:', oldName, '->', name);
+    log('📝', 'Rename:', oldName, '->', name);
   });
   socket.on('msgToServer', ({ name, message }) => {
     if (!socketName) {
       socketName = name;
       io.sockets.emit('newClient', { result: 4, name });
-      log(`[${new Date().toLocaleString()}]`, '😎', 'Reconnect:', name);
+      log('😎', 'Reconnect:', name);
     }
     io.sockets.emit('chatMsgToClients', { message, name });
-    log(`[${new Date().toLocaleString()}]`, '💬', name + ':', message);
+    log('💬', name + ':', message);
+  });
+  socket.on('douToServer', ({ name, message }) => {
+    if (!socketName) {
+      socketName = name;
+      io.sockets.emit('newClient', { result: 4, name });
+      log('😎', 'Reconnect:', name);
+    }
+    socket.broadcast.emit('douToClients', { message, name });
+    log('👋', name + ':', message);
   });
   socket.on('disconnect', () => {
     if (socketName) {
       io.sockets.emit('logout', { name: socketName });
     }
-    log(`[${new Date().toLocaleString()}]`, '👻', `Logout(${--count}):`, socketName || 'noName');
+    log('👻', `Logout(${--count}):`, socketName || 'noName');
   });
 });
-http.listen(port, () => log(`[${new Date().toLocaleString()}]`, '🍰', 'Server On:', port));
+http.listen(port, () => log('🍰', 'Server On:', port));
