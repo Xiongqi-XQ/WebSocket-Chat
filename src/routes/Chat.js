@@ -30,7 +30,13 @@ class Chat extends React.Component {
       this.input.current.input.value = '';
     }
   };
-  renderClient = ({ name, client, oldName }) => {
+  handleDou = () => {
+    const message = this.input.current.input.value || '抖啊抖啊抖';
+    const { dispatch, name } = this.props;
+    dispatch({ type: 'socket/sendDou', message, name: name });
+    dispatch({ type: 'chat/dou', name, message });
+  };
+  renderClient = ({ name, client, oldName, message }) => {
     switch (client) {
       case 1:
         return (
@@ -53,7 +59,13 @@ class Chat extends React.Component {
       case 4:
         return (
           <List.Item className={css.reconnectClient + ' client'}>
-            <div>{'欢迎 ' + name + ' 又回来了'} </div>
+            <div>{name === this.props.name ? '欢迎您' : name + ' 回到聊天室'} </div>
+          </List.Item>
+        );
+      case 5:
+        return (
+          <List.Item className={css.douClient + ' client'}>
+            <div>{'[抖一抖] ' + (name === this.props.name ? '我' : name) + ': ' + message} </div>
           </List.Item>
         );
       default:
@@ -89,6 +101,7 @@ class Chat extends React.Component {
             // onChange={event => this.setState({ message: event.target.value })}
             onPressEnter={this.handleSendMessage}
           />
+          <Button onClick={this.handleDou}>抖一哈</Button>
           <Button type="primary" onMouseDown={event => event.preventDefault()} onClick={this.handleSendMessage}>
             发送
           </Button>

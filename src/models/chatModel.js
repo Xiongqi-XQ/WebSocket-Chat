@@ -19,6 +19,9 @@ const chatModel = {
     reconnect({ content }, { name, oldName }) {
       return { content: content.concat({ name, client: 4 }) }; // 4 reconnect
     },
+    dou({ content }, { name, message }) {
+      return { content: content.concat({ name, message, client: 5 }) }; // 5 dou
+    },
   },
   effects: {},
   subscriptions: {},
