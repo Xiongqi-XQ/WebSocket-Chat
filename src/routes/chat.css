@@ -10,6 +10,7 @@
   bottom: 3px;
   height: 30px;
   padding: 0 2px;
+  z-index: 1;
 }
 .chatBox > button {
   margin-left: 2px;
