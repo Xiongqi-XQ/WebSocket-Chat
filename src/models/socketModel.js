@@ -1,14 +1,14 @@
-import io from 'socket.io-client';
-import url from '../config';
+import io from "socket.io-client";
+import url, { path } from "../config";
 
-const socket = io(url);
+const socket = io(url, { path });
 
-function douWindow(name = '抖一抖', message = '抖一抖') {
+function douWindow(name = "抖一抖", message = "抖一抖") {
   let dou;
   if (window.dou) {
     dou = window.dou;
   } else {
-    dou = window.open('', '', 'width=300,height=100');
+    dou = window.open("", "", "width=300,height=100");
     window.dou = dou;
     dou.onbeforeunload = () => (window.dou = null);
   }
@@ -29,49 +29,58 @@ function douWindow(name = '抖一抖', message = '抖一抖') {
   setTimeout(() => clearInterval(un), stop);
 }
 const socketModel = {
-  namespace: 'socket',
+  namespace: "socket",
   state: socket,
   reducers: {},
   effects: {
     login(action) {
-      socket.emit('loginToServer', { name: action.name });
+      socket.emit("loginToServer", { name: action.name });
     },
     rename({ name }) {
-      socket.emit('renameToServer', { name, oldName: window.localName });
+      socket.emit("renameToServer", { name, oldName: window.localName });
     },
     sendMessage({ name, message }) {
-      socket.emit('msgToServer', { name, message });
+      socket.emit("msgToServer", { name, message });
     },
     sendDou({ name, message }) {
-      socket.emit('douToServer', { name, message });
-    },
+      socket.emit("douToServer", { name, message });
+    }
   },
   subscriptions: {
     socketSub({ dispatch, history }) {
-      socket.on('connect', () => console.log('socket ' + url + ' connected sucess.'));
-      socket.on('loginResToClient', data => {
+      socket.on("connect", () =>
+        console.log("socket " + url + " connected sucess.")
+      );
+      socket.on("loginResToClient", data => {
         if (data.result === 1) {
           window.localName = data.name;
-          dispatch({ type: 'store/loginSuccess', name: data.name });
-          history.push('/chat');
+          dispatch({ type: "store/loginSuccess", name: data.name });
+          history.push("/chat");
         }
       });
-      socket.on('newClient', data => {
-        if (data.result === 1) dispatch({ type: 'chat/newClient', name: data.name });
-        else if (data.result === 3) dispatch({ type: 'chat/rename', name: data.name, oldName: data.oldName });
-        else if (data.result === 4) dispatch({ type: 'chat/reconnect', name: data.name });
+      socket.on("newClient", data => {
+        if (data.result === 1)
+          dispatch({ type: "chat/newClient", name: data.name });
+        else if (data.result === 3)
+          dispatch({
+            type: "chat/rename",
+            name: data.name,
+            oldName: data.oldName
+          });
+        else if (data.result === 4)
+          dispatch({ type: "chat/reconnect", name: data.name });
       });
-      socket.on('chatMsgToClients', data => {
-        dispatch({ type: 'chat/newMsg', data });
+      socket.on("chatMsgToClients", data => {
+        dispatch({ type: "chat/newMsg", data });
       });
-      socket.on('douToClients', ({ name, message }) => {
-        dispatch({ type: 'chat/dou', name, message });
+      socket.on("douToClients", ({ name, message }) => {
+        dispatch({ type: "chat/dou", name, message });
         if (window.localName) douWindow(name, message);
       });
-      socket.on('logout', ({ name }) => {
-        dispatch({ type: 'chat/logout', name });
+      socket.on("logout", ({ name }) => {
+        dispatch({ type: "chat/logout", name });
       });
-    },
-  },
+    }
+  }
 };
 export default socketModel;

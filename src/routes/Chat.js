@@ -101,7 +101,7 @@ class Chat extends React.Component {
             // onChange={event => this.setState({ message: event.target.value })}
             onPressEnter={this.handleSendMessage}
           />
-          <Button onClick={this.handleDou}>抖一哈</Button>
+          <Button onClick={this.handleDou}>抖一抖</Button>
           <Button type="primary" onMouseDown={event => event.preventDefault()} onClick={this.handleSendMessage}>
             发送
           </Button>
