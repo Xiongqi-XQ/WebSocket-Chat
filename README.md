@@ -1,4 +1,4 @@
-# Web Socket Chat - [http://league.xhuyq.me/chat/][1]
+# WebSocket Chat - [http://league.xhuyq.me/chat/][1]
 
 ## Mobile:
 
